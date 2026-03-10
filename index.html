@@ -147,5 +147,55 @@
             <div class="gift-box">🎁</div>
         </a>
     </div>
+    <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const audio = document.getElementById('bgMusic');
+
+    // 1. Музыканың күйін (ойнап тұр ма, жоқ па) және уақытын сақтау
+    function saveMusicStatus() {
+        localStorage.setItem('musicCurrentTime', audio.currentTime);
+        localStorage.setItem('musicIsPlaying', !audio.paused);
+    }
+
+    // 2. Бет жүктелгенде музыканы қалпына келтіру
+    window.addEventListener('load', () => {
+        const savedTime = localStorage.getItem('musicCurrentTime');
+        const isPlaying = localStorage.getItem('musicIsPlaying') === 'true';
+
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+
+        // Егер алдыңғы бетте ойнап тұрса, бұл бетте де қосылады
+        if (isPlaying) {
+            audio.play().catch(() => {
+                console.log("Авто-ойнату үшін экранды бір рет басу керек");
+            });
+        }
+    });
+
+    // 3. Музыка ойнап тұрғанда уақытты әр секунд сайын жаңартып тұру
+    setInterval(() => {
+        if (!audio.paused) {
+            localStorage.setItem('musicCurrentTime', audio.currentTime);
+        }
+    }, 1000);
+
+    // 4. Беттен шығар алдында күйін сақтау
+    window.addEventListener('beforeunload', saveMusicStatus);
+
+    // Пайдаланушы сайтқа бірінші рет кіргенде музыка қосылуы үшін
+    // экранның кез келген жерін басса болды
+    document.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            localStorage.setItem('musicIsPlaying', 'true');
+        }
+    }, { once: true }); 
+</script>
 </body>
 </html>
+
