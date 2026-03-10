@@ -1,0 +1,17 @@
+/* Барлық элементтерге арналған */
+* {
+    -webkit-tap-highlight-color: transparent; /* Басқанда көк түс шықпауы үшін */
+    box-sizing: border-box;
+}
+
+body {
+    -webkit-text-size-adjust: 100%; /* Мәтін өзгеріп кетпеуі үшін */
+    width: 100%;
+    overflow-x: hidden; /* Оңға-солға жылжып кетпеуі үшін */
+}
+
+/* Суреттер экраннан шықпауы керек */
+img {
+    max-width: 100%;
+    height: auto;
+}
