@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1</title>
+    <audio id="myAudio" loop>
+    <source src="Dosekesh - Ayaulym (Yeski Taspa).mp3" type="audio/mpeg">
+</audio>
+
+<button id="startBtn" onclick="startEverything()" style="padding: 15px 30px; background: #ff9a9e; color: white; border: none; border-radius: 20px; font-size: 18px; cursor: pointer;">
+    ❤️ Сайтты ашу (Музыкамен)
+</button>
+
+<script>
+    function startEverything() {
+        var audio = document.getElementById("myAudio");
+        audio.play();
+        
+        // Музыка қосылған соң, батырманы жасырып қоюға болады
+        document.getElementById("startBtn").style.display = "none";
+        
+        // Егер келесі бетке өткің келсе, осы жерге код қосуға болады:
+        // window.location.href = "page2.html";
+    }
+</script>
     <style>
         /* 1. НЕГІЗГІ БАПТАУЛАР */
         body, html {
@@ -127,6 +147,5 @@
             <div class="gift-box">🎁</div>
         </a>
     </div>
-
 </body>
 </html>
