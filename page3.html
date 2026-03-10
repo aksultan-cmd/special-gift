@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сен туралы...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fffafa;
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+        }
+
+        .title {
+            font-size: 2rem;
+            color: #d81b60;
+            margin-bottom: 60px;
+            text-align: center;
+            padding: 0 20px;
+            animation: fadeIn 2s ease;
+        }
+
+        /* ЖҮРЕКТЕРДІҢ ОРНАЛАСУЫ */
+        .hearts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 60px;
+            justify-content: center;
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        .heart-item {
+            width: 100px;
+            height: 100px;
+            background: #ff85a1;
+            position: relative;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        .heart-item::before, .heart-item::after {
+            content: "";
+            width: 100px;
+            height: 100px;
+            background: #ff85a1;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart-item::before { top: -50px; left: 0; }
+        .heart-item::after { left: 50px; top: 0; }
+
+        .heart-item span {
+            transform: rotate(45deg);
+            color: white;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+
+        /* БАСҚАНДАҒЫ СТИЛЬ */
+        .heart-item.active {
+            background: #d81b60;
+            transform: rotate(-45deg) scale(1.1);
+        }
+        .heart-item.active::before, .heart-item.active::after {
+            background: #d81b60;
+        }
+
+        /* ХАБАРЛАМА БЛОГЫ */
+        .message-display {
+            margin-top: 80px;
+            font-size: 1.6rem;
+            color: #d81b60;
+            text-align: center;
+            min-height: 50px;
+            font-style: italic;
+            padding: 0 20px;
+            transition: 0.3s;
+        }
+
+        .next-btn {
+            margin-top: 50px;
+            padding: 15px 40px;
+            border: 2px solid #ff4d6d;
+            color: #ff4d6d;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            opacity: 0;
+            visibility: hidden;
+            transition: 1s;
+        }
+
+        .btn-show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <h2 class="title">Мына жүректердің әрқайсысында саған арналған сөз бар...</h2>
+
+    <div class="hearts-grid">
+        <div class="heart-item" onclick="reveal(this, 'Сенің күлкің айналаны нұрландырады ✨')"><span>1</span></div>
+        <div class="heart-item" onclick="reveal(this, 'Сенің көркем мінезің — нағыз байлығың 🌸')"><span>2</span></div>
+        <div class="heart-item" onclick="reveal(this, 'Сен ешкімге ұқсамайтын ерекше жансың 💖')"><span>3</span></div>
+        <div class="heart-item" onclick="reveal(this, 'Сенің мейірімділігің шексіз 🌷')"><span>4</span></div>
+        <div class="heart-item" onclick="reveal(this, 'Сен — нағыз сиқырсың! 🔮')"><span>5</span></div>
+    </div>
+
+    <div class="message-display" id="displayText"></div>
+
+    <a href="page4.html" class="next-btn" id="nextBtn">Әрі қарай өту →</a>
+
+    <script>
+        let openedHearts = new Set();
+
+        function reveal(element, message) {
+            // Мәтінді шығару
+            const display = document.getElementById('displayText');
+            display.style.opacity = 0;
+            
+            setTimeout(() => {
+                display.innerText = message;
+                display.style.opacity = 1;
+            }, 200);
+
+            // Жүректі белсенді ету
+            if (!element.classList.contains('active')) {
+                element.classList.add('active');
+                openedHearts.add(element);
+            }
+
+            // Барлық 5 жүрек ашылғанда батырманы көрсету
+            if (openedHearts.size === 5) {
+                document.getElementById('nextBtn').classList.add('btn-show');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <style>
+        /* 1. НЕГІЗГІ БАПТАУЛАР */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Georgia', serif;
+            background-color: black;
+        }
+
+        /* 2. ФОНДЫҚ СУРЕТ */
+        .hero-container {
+            width: 100%;
+            height: 100vh;
+            /* СУРЕТТІҢ АТЫН ОСЫ ЖЕРГЕ ЖАЗЫҢЫЗ */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                              url('1.jpg'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeInPage 2s ease-in-out;
+        }
+
+        /* 3. МӘТІНДЕР */
+        .text-content {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            margin: 0;
+            animation: heartBeat 1.5s infinite ease-in-out;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .sub-title {
+            font-size: 1.5rem;
+            margin-top: 15px;
+            font-style: italic;
+            opacity: 0;
+            /* Басты мәтіннен кейін жайлап шығады */
+            animation: fadeInText 2s ease-in-out 1s forwards;
+        }
+
+        /* 4. СЫЙЛЫҚ БЛОГЫ */
+        .gift-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            opacity: 0;
+            /* Ең соңында, 2.5 секундтан кейін пайда болады */
+            animation: fadeInText 2s ease-in-out 2.5s forwards;
+            margin-top: 30px;
+        }
+
+        .gift-box {
+            font-size: 140px; /* СЫЙЛЫҚТЫҢ КӨЛЕМІ */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: giftJump 2s infinite ease-in-out;
+            line-height: 1;
+        }
+
+        .click-me {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-style: italic;
+            letter-spacing: 2px;
+            animation: blink 1.5s infinite;
+        }
+
+        .gift-wrapper:hover .gift-box {
+            transform: scale(1.15);
+        }
+
+        /* АНИМАЦИЯЛАР */
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes giftJump {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-20px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(5deg); }
+            75% { transform: translateY(-10px) rotate(-3deg); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-container">
+        <div class="text-content">
+            <h1 class="main-title">Сен Сиқырлысың</h1>
+            <p class="sub-title">...және әлемді көркем етесің</p>
+        </div>
+
+        <a href="2index.html" class="gift-wrapper">
+            <div class="click-me">Сыйлықты бас...</div>
+            <div class="gift-box">🎁</div>
+        </a>
+    </div>
+
+</body>
+</html>

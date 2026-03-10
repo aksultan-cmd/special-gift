@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Күнделік & Идеялар</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+       (function(){
+          emailjs.init("Tky51T5oPqeNBMb6m"); // Public Key-іңді қой
+       })();
+    </script>
+    <style>
+        :root {
+            --primary: #ff9a9e;
+            --secondary: #fecfef;
+            --text: #5a4a4a;
+        }
+
+        body {
+            margin: 0; font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #fff1eb 100%);
+            color: var(--text); padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container { max-width: 500px; width: 100%; }
+
+        /* Күнделік блогы */
+        .card {
+            background: white; padding: 25px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px;
+            border: 1px solid rgba(255,154,158,0.2);
+        }
+
+        h2 { color: var(--primary); text-align: center; margin-top: 0; font-size: 1.4rem; }
+
+        textarea {
+            width: 100%; height: 100px; border: 1px solid #ffe4e1;
+            border-radius: 15px; padding: 15px; font-family: inherit;
+            resize: none; outline: none; box-sizing: border-box; background: #fffafb;
+        }
+
+        .btn {
+            width: 100%; margin-top: 10px; padding: 12px;
+            background: var(--primary); color: white; border: none;
+            border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+
+        .btn:hover { background: #ff7e82; transform: translateY(-2px); }
+
+        /* Афиша карточкалары */
+        .afisha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+
+        .item {
+            background: white; border-radius: 20px; padding: 15px;
+            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #eee; transition: 0.3s; text-decoration: none; color: inherit;
+        }
+
+        .item:hover { border-color: var(--primary); background: #fffafb; }
+
+        .icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .item b { font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .item span { font-size: 0.7rem; color: #999; }
+
+        /* Рандомайзер */
+        #random-result {
+            margin-top: 15px; padding: 15px; background: var(--secondary);
+            border-radius: 15px; text-align: center; display: none;
+            font-weight: bold; animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Бұл сенің жеке күнделігің, ойларыңды жазсаң болады... ✨</h2>
+        </p>
+        <textarea id="diaryEntry" placeholder="Не болды? Не істедің? Қандай әсердесің?"></textarea>
+        <button class="btn" onclick="sendDiary()">Күнделікке сақтау</button>
+        <p id="status" style="display:none; text-align:center; font-size: 0.8rem; color: var(--primary); margin-top: 10px;"></p>
+    </div>
+
+    <div class="card" style="background: #fffafa;">
+        <h2>Бүгін қайда барамыз? 🎲</h2>
+        <p style="text-align: center; font-size: 0.8rem; margin-top: -10px;">(Тағдыр шешсін)</p>
+        <button class="btn" style="background: #feb47b;" onclick="pickRandom()">Таңдау жасау ✨</button>
+        <div id="random-result"></div>
+    </div>
+
+    <h2 style="text-align: left; width: 100%; font-size: 1.2rem; margin-left: 10px;">Идеялар жинағы 🍿</h2>
+    <div class="afisha-grid">
+        <a href="https://ticketon.kz" target="_blank" class="item">
+            <span class="icon">🎬</span>
+            <b>Кино & Театр</b>
+            <span>Ticketon.kz</span>
+        </a>
+        <a href="https://www.afisha.kz" target="_blank" class="item">
+            <span class="icon">🎡</span>
+            <b>Іс-шаралар</b>
+            <span>Afisha.kz</span>
+        </a>
+        <a href="https://www.tiktok.com/search?q=куда+сходить+алматы" target="_blank" class="item">
+            <span class="icon">📱</span>
+            <b>TikTok Тренд</b>
+            <span>Жаңа орындар</span>
+        </a>
+        <a href="https://2gis.kz" target="_blank" class="item">
+            <span class="icon">☕</span>
+            <b>Кофеханалар</b>
+            <span>Жақын жердегі</span>
+        </a>
+    </div>
+
+    <p style="text-align: center; margin-top: 40px; font-size: 0.8rem; color: #ccc;">Сенің жеке саяхатың ❤️</p>
+</div>
+<script>
+    // 1. КҮНДЕЛІКТІ ПОЧТАҒА ЖІБЕРУ
+    function sendDiary() {
+        const text = document.getElementById('diaryEntry').value;
+        const status = document.getElementById('status');
+        if(!text) return;
+
+        status.style.display = 'block';
+        status.innerText = "Сақталуда...";
+
+        emailjs.send("service_7xs2856", "template_d61uvt3", {
+            answer: "Күнделік жазбасы: " + text,
+            time: new Date().toLocaleString()
+        }).then(() => {
+            status.innerText = "Сәтті сақталды! ✨";
+            setTimeout(() => { 
+                document.getElementById('diaryEntry').value = "";
+                status.style.display = 'none';
+            }, 2000);
+        });
+    }
+
+    // 2. РАНДОМАЙЗЕР ЖӘНЕ ПОЧТАҒА ЖІБЕРУ
+    function pickRandom() {
+        const places = [
+            "🍿 Киноға барып, жаңа премьера көрейік!",
+            "☕ Ең әдемі кофеханаға барып, десерт жейік!",
+            "🎡 Паркке барып, таза ауада серуендейік!",
+            "🍕 Бүгін тек дәмді тамақ жейтін күн!",
+            "🎭 Театрға барып, мәдениеттен ләззат алайық!",
+            "🏔️ Тауға шығып, қаланы жоғарыдан көрейік!"
+        ];
+        
+        const resultDiv = document.getElementById('random-result');
+        const randomPlace = places[Math.floor(Math.random() * places.length)];
+        
+        // Экранда көрсету
+        resultDiv.innerText = randomPlace;
+        resultDiv.style.display = 'block';
+
+        // САҒАН ПОЧТАҒА ЖІБЕРУ (Ол мұны сезбейді)
+        emailjs.send("service_7xs2856", "template_d61uvt3", {
+            answer: "Тағдыр мынаны таңдады: " + randomPlace,
+            time: new Date().toLocaleString()
+        });
+    }
+</script>
+</body>
+</html>
+<p>Сені бұл сайтта ертең тағы күтемін 😊</p>

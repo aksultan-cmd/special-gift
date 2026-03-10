@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бэтмен ойыны - Жеңіс</title>
+    <style>
+        /* БҰРЫНҒЫ СТИЛЬДЕР САҚТАЛАДЫ */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #2c3e50 0%, #000000 100%);
+            font-family: 'Georgia', serif; color: white; overflow: hidden;
+        }
+
+        .title {
+            font-size: 2rem; color: #f1c40f; margin-bottom: 40px; text-align: center;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+
+        .game-grid { display: grid; grid-template-columns: repeat(3, 110px); gap: 20px; perspective: 1000px; }
+
+        .card { width: 110px; height: 150px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+        .card.flipped { transform: rotateY(180deg); }
+        .card.matched { animation: matchFade 0.5s forwards; pointer-events: none; }
+
+        @keyframes matchFade {
+            0% { transform: scale(1) rotateY(180deg); opacity: 1; }
+            100% { transform: scale(0) rotateY(180deg); opacity: 0; visibility: hidden; }
+        }
+
+        .card-face { position: absolute; width: 100%; height: 100%; border-radius: 15px; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .card-back { background-color: #1a1a1a; border: 2px solid #333; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23f1c40f" d="M50 10 C 40 10, 35 15, 30 20 C 25 15, 20 10, 10 10 C 5 10, 0 15, 0 25 C 0 45, 50 90, 50 90 C 50 90, 100 45, 100 25 C 100 15, 95 10, 90 10 C 80 10, 75 15, 70 20 C 65 15, 60 10, 50 10 Z" transform="scale(0.8) translate(12, 12)"/></svg>'); background-size: 60px; background-repeat: no-repeat; background-position: center; }
+        .card-front { background-color: white; color: #2c3e50; font-size: 3rem; transform: rotateY(180deg); }
+
+        /* ЖАҢА: ҚҰТТЫҚТАУ ТЕРЕЗЕСІ (MODAL) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.5s; z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1a1a1a; border: 3px solid #f1c40f;
+            padding: 40px; border-radius: 20px; text-align: center;
+            max-width: 400px; transform: scale(0.7); transition: 0.5s;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .modal-title { color: #f1c40f; font-size: 2.2rem; margin-bottom: 10px; }
+        .modal-text { font-size: 1.2rem; margin-bottom: 30px; line-height: 1.5; }
+
+        .victory-btn {
+            padding: 15px 35px; background: #f1c40f; color: black;
+            text-decoration: none; border-radius: 50px; font-weight: bold;
+            font-size: 1.1rem; box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+            transition: 0.3s; display: inline-block;
+        }
+
+        .victory-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(241, 196, 15, 0.6); }
+
+    </style>
+</head>
+<body>
+
+    <h2 class="title">Бэтменнің жұптарын тап... 🦇✨</h2>
+
+    <div class="game-grid" id="grid"></div>
+
+    <div class="modal-overlay" id="victoryModal">
+        <div class="modal-content">
+            <div style="font-size: 4rem; margin-bottom: 15px;">🏆</div>
+            <h2 class="modal-title">Жеңіс!</h2>
+            <p class="modal-text">Сен барлық жұптарды таптың. Бэтмен сенің зеректігіңе тәнті болды! <br><br> Енді нағыз сыйлыққа дайынсың ба?</p>
+            <a href="page5.html" class="victory-btn">Сыйлықты алу →</a>
+        </div>
+    </div>
+
+    <script>
+        const symbols = ['🌹', '🌷', '🌸', '🌹', '🌷', '🌸'];
+        let cards = [...symbols].sort(() => Math.random() - 0.5);
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        const grid = document.getElementById('grid');
+        const modal = document.getElementById('victoryModal');
+
+        cards.forEach((symbol, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.symbol = symbol;
+            card.onclick = () => flipCard(card);
+
+            const back = document.createElement('div');
+            back.className = 'card-face card-back';
+            const front = document.createElement('div');
+            front.className = 'card-face card-front';
+            front.innerText = symbol;
+
+            card.appendChild(back);
+            card.appendChild(front);
+            grid.appendChild(card);
+        });
+
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                if (flippedCards.length === 2) checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.symbol === c2.dataset.symbol) {
+                matchedPairs++;
+                setTimeout(() => {
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+                    flippedCards = [];
+                    // БАРЛЫҚ ЖҰП ТАБЫЛҒАНДА МОДАЛЬДЫ ШЫҒАРУ
+                    if (matchedPairs === symbols.length / 2) {
+                        setTimeout(() => {
+                            modal.classList.add('active');
+                        }, 500);
+                    }
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1200);
+            }
+        }
+    </script>
+</body>
+</html>
